@@ -277,10 +277,8 @@ Boolean isColorsEqual ( Color color1 , Color color2 )
 
 Boolean isPointInsideImage ( Image image , Point point )
 {
-  if ( point.row <  0            )  { return FALSE ; }
-  if ( point.row >= image.height )  { return FALSE ; }
-  if ( point.col <  0            )  { return FALSE ; }
-  if ( point.col >= image.width  )  { return FALSE ; }
+  if ( point.row <  0  || point.row >= image.height           )  { return FALSE ; }
+  if ( point.col <  0   ||     point.col >= image.width    )  { return FALSE ; }
 
   return TRUE ;
 }
@@ -290,7 +288,7 @@ Boolean isPointInsideImage ( Image image , Point point )
 Pixel getPixel ( Image image , Point point )
 {
   if   ( isPointInsideImage( image , point ) )  { return image.pixels[ point.row * image.width + point.col ] ; }
-  else                                          { return Black                                               ; }
+  else                                          { return Black                                               ; } // None?
 }
 
 /*=================================================================================================================================================*/
@@ -343,7 +341,7 @@ Boolean saveImage ( Image image , char * fileName )
     
   while (i < (image.width * image.height))
   { 
-    for( j=0; j<5; j++) 
+    for( j=0; j<image.width; j++) 
     {
       if   ( fprintf( fp, "%d %d %d ", image.pixels[i].red, image.pixels[i].green, image.pixels[i].blue) > 0){ i++        ;} 
       else                                                                                                   {return FALSE;}  
@@ -576,18 +574,18 @@ Boolean drawCharacter ( Image image , Point topLeft , char c , Color color )
 
   int index = ((int)c - 32);
 
-  topLeft.col += 7;
+  topLeft.col += 15;
 
   int prev = topLeft.col;
 
-  for( i=12; i>=0; i--)
+  for( i=0; i<=12; i++)
   {
     unsigned int ch = characterRasters[index][i];
   
     while( ch != 0 )
 
-    { if  ((ch & 1 ) == 1 ) { if(setPixel(image, topLeft, color)) {ch >>= 1;}}
-      else                  { ch      >>= 1 ; }
+    { if  ((ch & 1 ) ) { if(setPixel(image, topLeft, color)) {ch*=2;}}
+      else                  { ch      *=2 ; }
       topLeft.col --;
 
     }
@@ -618,7 +616,10 @@ Boolean drawString ( Image image , Point topLeft , char * string , Color color )
 }
 
 /***************************************************************************************************************************************************/
-
+// New Sorting may be used 
+void sortArray(Image image){
+ //TODO      
+}
 
 
 
